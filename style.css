@@ -35,6 +35,19 @@ header {
     width: 100%;
     height: auto;
 }
+
+
+.video-grid video {
+    width: 100%;
+    height: auto;
+}
+
+
+
+
+
+
+
 footer {
     background-color: #111;
     color: #aaa;
