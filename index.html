@@ -28,8 +28,7 @@
         }
         .filters button, .filters select {
             background-color: #F59B00;
-            border: none;
-            padding: 0.5rem 1rem;
+                       padding: 0.5rem 1rem;
             color: #000;
             font-weight: bold;
             cursor: pointer;
@@ -45,11 +44,17 @@
             background-color: #222;
             aspect-ratio: 16 / 9;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             color: #888;
             font-size: 1.2rem;
             border: 1px solid #444;
+            padding: 0.5rem;
+        }
+        video {
+            width: 100%;
+            height: auto;
         }
         @media (max-width: 900px) {
             .video-grid {
@@ -94,17 +99,7 @@
             <option>2022</option>
         </select>
     </div>
-    <div class="video-grid">
-        <div class="video-placeholder">Video 1</div>
-        <div class="video-placeholder">Video 2</div>
-        <div class="video-placeholder">Video 3</div>
-        <div class="video-placeholder">Video 4</div>
-        <div class="video-placeholder">Video 5</div>
-        <div class="video-placeholder">Video 6</div>
-        <div class="video-placeholder">Video 7</div>
-        <div class="video-placeholder">Video 8</div>
-        <div class="video-placeholder">Video 9</div>
-    </div>
+    <div class="video-grid"></div>
     <footer>
         <h2>Impressum</h2>
         <p>Volker Horstmann<br>
@@ -114,8 +109,32 @@
         Verantwortlich für den Inhalt: Volker Horstmann</p>
 
         <h2>Datenschutzerklärung</h2>
-        <p>Diese Website verwendet Google Analytics zur Analyse des Nutzerverhaltens. Es werden keine personenbezogenen Daten erhoben. Die Videos werden über Firebase gehostet. Bei Fragen zum Datenschutz kontaktieren Sie bitte <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a>.</p>
+        <p>Diese Website verwendet keine personenbezogenen Daten. Die Videos werden über GitHub gehostet. Bei Fragen zum Datenschutz kontaktieren Sie bitte <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a>.</p>
     </footer>
+
+    <script>
+    fetch('videos.json')
+      .then(response => response.json())
+      .then(videos => {
+        const grid = document.querySelector('.video-grid');
+        videos.forEach(video => {
+          const div = document.createElement('div');
+          div.className = 'video-placeholder';
+          div.innerHTML = `
+            <video controls>
+              <source src="${video.file}" type="video/mp4">
+              Dein Browser unterstützt kein Video.
+            </video>
+            <p><strong>${video.title}</strong><br>${video.year}<br>${video.description}</p>
+          `;
+          grid.appendChild(div);
+        });
+      })
+      .catch(error => {
+        console.error('Fehler beim Laden der Videos:', error);
+      });
+    </script>
 </body>
 </html>
+
 
