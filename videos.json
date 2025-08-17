@@ -1,0 +1,15 @@
+
+[
+  {
+    "title": "Tennis im Park",
+    "year": 2024,
+    "description": "Ein spontanes Match im Stadtpark.",
+    "file": "videos/tennis-im-park.mp4"
+  },
+  {
+    "title": "Tennis auf dem Dach",
+    "year": 2023,
+    "description": "Urban Tennis auf einem Hochhaus.",
+    "file": "videos/tennis-auf-dem-dach.mp4"
+  }
+]
