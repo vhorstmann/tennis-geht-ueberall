@@ -12,10 +12,9 @@
     </header>
 
     <div class="filters">
-        <button>Beliebteste Videos</button>
-        <button>Neueste Videos</button>
-        <button>Best of</button>
-        <select>
+        <!-- <button>Beliebteste Videos</button> -->
+        <!-- <button>Neueste Videos</button> -->
+        <select id="yearFilter">
             <option disabled selected>Aus dem Jahr</option>
             <option>2025</option>
             <option>2024</option>
@@ -36,26 +35,43 @@
     </footer>
 
     <script>
+        let allVideos = [];
+
+        function renderVideos(videos) {
+            const grid = document.querySelector('.video-grid');
+            grid.innerHTML = '';
+            videos.forEach(video => {
+                const div = document.createElement('div');
+                div.className = 'video-placeholder';
+                div.innerHTML = `
+                    <video controls>
+                        <source src="${video.file}" type="video/mp4">
+                        Dein Browser unterstützt kein Video.
+                    </video>
+                    <p><strong>${video.title}</strong><br>${video.year}<br>${video.description}</p>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
         fetch('videos.json')
             .then(response => response.json())
             .then(videos => {
-                const grid = document.querySelector('.video-grid');
-                videos.forEach(video => {
-                    const div = document.createElement('div');
-                    div.className = 'video-placeholder';
-                    div.innerHTML = `
-                        <video controls>
-                            <source src="${video.file}" type="video/mp4">
-                            Dein Browser unterstützt kein Video.
-                        </video>
-                        <p><strong>${video.title}</strong><br>${video.year}<br>${video.description}</p>
-                    `;
-                    grid.appendChild(div);
-                });
+                allVideos = videos;
+                renderVideos(allVideos);
             })
             .catch(error => {
                 console.error('Fehler beim Laden der Videos:', error);
             });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const yearFilter = document.getElementById('yearFilter');
+            yearFilter.addEventListener('change', () => {
+                const selectedYear = parseInt(yearFilter.value);
+                const filtered = allVideos.filter(video => video.year === selectedYear);
+                renderVideos(filtered);
+            });
+        });
     </script>
 </body>
 </html>
