@@ -31,10 +31,7 @@ header {
     gap: 1rem;
     padding: 1rem;
 }
-.video-grid video {
-    width: 100%;
-    height: auto;
-}
+
 
 .video-placeholder:hover {
     border-color: #F59B00;
