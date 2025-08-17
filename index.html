@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis geht überall</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+        header {
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem;
+        }
+        .filters button, .filters select {
+            background-color: #F59B00;
+            border: none;
+            padding: 0.5rem 1rem;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .video-placeholder {
+            background-color: #222;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.2rem;
+            border: 1px solid #444;
+        }
+        footer {
+            background-color: #111;
+            color: #ccc;
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+        }
+        footer h2 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+        }
+        footer a {
+            color: #F59B00;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tennis geht überall</h1>
+    </header>
+    <div class="filters">
+        <button>Beliebteste Videos</button>
+        <button>Neueste Videos</button>
+        <button>Best of</button>
+        <select>
+            <option disabled selected>Aus dem Jahr</option>
+            <option>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+            <option>2022</option>
+        </select>
+    </div>
+    <div class="video-grid">
+        <div class="video-placeholder">Video 1</div>
+        <div class="video-placeholder">Video 2</div>
+        <div class="video-placeholder">Video 3</div>
+        <div class="video-placeholder">Video 4</div>
+        <div class="video-placeholder">Video 5</div>
+        <div class="video-placeholder">Video 6</div>
+        <div class="video-placeholder">Video 7</div>
+        <div class="video-placeholder">Video 8</div>
+        <div class="video-placeholder">Video 9</div>
+    </div>
+    <footer>
+        <h2>Impressum</h2>
+        <p>Volker Horstmann<br>
+        Flurstr. 11<br>
+        33790 Halle<br>
+        Kontakt: <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a><br>
+        Verantwortlich für den Inhalt: Volker Horstmann</p>
+
+        <h2>Datenschutzerklärung</h2>
+        <p>Diese Website verwendet Google Analytics zur Analyse des Nutzerverhaltens. Es werden keine personenbezogenen Daten erhoben. Die Videos werden über Firebase gehostet. Bei Fragen zum Datenschutz kontaktieren Sie bitte <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a>.</p>
+    </footer>
+</body>
+</html>
