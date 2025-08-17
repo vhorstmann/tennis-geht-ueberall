@@ -36,6 +36,19 @@ header {
     height: auto;
 }
 
+.video-placeholder:hover {
+    border-color: #F59B00;
+    box-shadow: 0 0 10px #F59B00;
+}
+
+.video-placeholder p {
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #ccc;
+}
+
+
+
 
 .video-placeholder {
     padding: 0.5rem;
