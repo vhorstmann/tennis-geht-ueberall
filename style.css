@@ -1,0 +1,44 @@
+
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+}
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.filters button, .filters select {
+    background-color: #F59B00;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+.video-grid video {
+    width: 100%;
+    height: auto;
+}
+footer {
+    background-color: #111;
+    color: #aaa;
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
+}
