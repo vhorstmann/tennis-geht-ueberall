@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Upload – Tennis geht überall</title>
+  <title>Admin Upload – Tennis geht überall (mit Größencheck & Metadaten-Modus)</title>
   <meta name="robots" content="noindex,nofollow">
   <style>
     :root { color-scheme: dark light; }
@@ -18,12 +18,14 @@
     .ok { color: #38c172; }
     .err { color: #e3342f; }
     .status { margin-top: .75rem; }
+    .muted { color:#999; }
+    .hidden { display:none; }
     code { background:#111; padding:.1rem .3rem; border-radius:4px; }
   </style>
 </head>
 <body>
-  <h1>Video hochladen (Repo-Upload)</h1>
-  <p class="hint">Diese Seite ist privat. Teile die URL nicht. Einzeldateigröße max. 100&nbsp;MB (GitHub API Limit).</p>
+  <h1>Video hochladen / Metadaten anlegen</h1>
+  <p class="hint">Max Upload für Cloudflare Workers ~10&nbsp;MB. Größere Dateien bitte vorher komprimieren oder per GitHub Web hochladen und unten den Metadaten-Modus nutzen.</p>
 
   <form id="form">
     <label for="title">Titel</label>
@@ -40,21 +42,33 @@
       </div>
     </div>
 
-    <label for="file">Video (MP4, ≤ 100 MB)</label>
-    <input id="file" name="file" type="file" accept="video/mp4" required>
+    <label><input id="metaOnly" type="checkbox"> Nur Metadaten eintragen (Datei ist bereits im Repo)</label>
 
-    <div class="row">
-      <div>
-        <label for="poster">Poster (JPG/PNG, optional)</label>
-        <input id="poster" name="poster" type="file" accept="image/*">
-      </div>
-      <div>
-        <label for="yearConfirm">Jahr bestätigen</label>
-        <input id="yearConfirm" type="checkbox" required> <span class="hint">Ich bestätige, dass das Jahr korrekt ist.</span>
+    <div id="fileBlock">
+      <label for="file">Video (MP4, ≤ 9.5 MB empfohlen)</label>
+      <input id="file" name="file" type="file" accept="video/*">
+      <div id="fileInfo" class="muted"></div>
+
+      <div class="row">
+        <div>
+          <label for="poster">Poster (JPG/PNG, optional)</label>
+          <input id="poster" name="poster" type="file" accept="image/*">
+        </div>
+        <div>
+          <label for="yearConfirm">Jahr bestätigen</label>
+          <input id="yearConfirm" type="checkbox" required> <span class="hint">Ich bestätige, dass das Jahr korrekt ist.</span>
+        </div>
       </div>
     </div>
 
-    <button type="submit">Hochladen</button>
+    <div id="metaBlock" class="hidden">
+      <label for="filePath">Dateipfad im Repo (z. B. <code>/Videos/meinvideo.mp4</code>)</label>
+      <input id="filePath" name="filePath" placeholder="/Videos/datei.mp4">
+      <label for="posterPath">Poster-Pfad (optional, z. B. <code>/assets/img/poster/bild.jpg</code>)</label>
+      <input id="posterPath" name="posterPath" placeholder="/assets/img/poster/bild.jpg">
+    </div>
+
+    <button type="submit">Senden</button>
     <div id="status" class="status"></div>
     <div id="result" class="status"></div>
     <div id="videosCheck" class="status"></div>
@@ -62,7 +76,8 @@
   </form>
 
 <script>
-const ENDPOINT = "https://tennis-upload.vhorstmann.workers.dev/upload";
+const ENDPOINT_UPLOAD = "https://tennis-upload.vhorstmann.workers.dev/upload";
+const ENDPOINT_APPEND = "https://tennis-upload.vhorstmann.workers.dev/append";
 const ADMIN_KEY = "R7mC9xB2kZpQ4tF6nW1sY8uL3aH5vJ0dXqWyEuPo";
 
 const form = document.getElementById('form');
@@ -70,21 +85,47 @@ const statusEl = document.getElementById('status');
 const resultEl = document.getElementById('result');
 const checkBtn = document.getElementById('checkVideos');
 const videosEl = document.getElementById('videosCheck');
+const metaOnly = document.getElementById('metaOnly');
+const fileBlock = document.getElementById('fileBlock');
+const metaBlock = document.getElementById('metaBlock');
+const fileInput = document.getElementById('file');
+const fileInfo = document.getElementById('fileInfo');
 
 function setStatus(msg, cls='') {
   statusEl.className = 'status ' + cls;
   statusEl.textContent = msg;
 }
 function showResult(fileName) {
-  resultEl.innerHTML = 'Hochgeladen: <strong>' + (fileName || '(unbekannt)') + '</strong>';
+  resultEl.innerHTML = 'Fertig: <strong>' + (fileName || '(ohne Datei)') + '</strong>';
   resultEl.className = 'status ok';
 }
+
+function formatMB(bytes) {
+  return (bytes / (1024*1024)).toFixed(2) + ' MB';
+}
+
+fileInput.addEventListener('change', () => {
+  const f = fileInput.files && fileInput.files[0];
+  if (!f) { fileInfo.textContent=''; return; }
+  fileInfo.textContent = 'Datei: ' + f.name + ' (' + formatMB(f.size) + ')';
+  if (f.size > 9.5 * 1024 * 1024) {
+    setStatus('Datei ist größer als 9.5 MB – Upload kann an Cloudflare-Limit scheitern. Bitte komprimieren.', 'err');
+  } else {
+    setStatus('', '');
+  }
+});
+
+metaOnly.addEventListener('change', () => {
+  const on = metaOnly.checked;
+  fileBlock.classList.toggle('hidden', on);
+  metaBlock.classList.toggle('hidden', !on);
+});
+
 async function checkVideosJson() {
   videosEl.className = 'status';
   videosEl.textContent = 'Lade videos.json ...';
   try {
-    // Pfad ggf. anpassen, falls Repo nicht unter /tennis-geht-ueberall/ veröffentlicht ist
-    const r = await fetch('/videos.json?ts=' + Date.now(), { cache: 'no-store' });
+    const r = await fetch('videos.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const arr = await r.json();
     if (!Array.isArray(arr)) throw new Error('Kein Array erhalten.');
@@ -101,20 +142,40 @@ checkBtn?.addEventListener('click', checkVideosJson);
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(form);
-  const file = fd.get('file');
-  if (!file) return setStatus('Bitte Videodatei wählen', 'err');
-  if (file.size > 100 * 1024 * 1024) return setStatus('Datei > 100 MB. Bitte kleiner komprimieren.', 'err');
 
-  setStatus('Lade hoch...', '');
   try {
-    const r = await fetch(ENDPOINT, {
+    if (metaOnly.checked) {
+      // Nur Metadaten anlegen
+      const filePath = fd.get('filePath');
+      if (!filePath) return setStatus('Bitte Dateipfad im Repo angeben (z. B. /Videos/datei.mp4)', 'err');
+      setStatus('Sende Metadaten...', '');
+      const r = await fetch(ENDPOINT_APPEND, {
+        method: 'POST',
+        headers: { 'x-admin-key': ADMIN_KEY },
+        body: fd
+      });
+      const text = await r.text();
+      if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
+      setStatus('Metadaten gespeichert.','ok');
+      showResult(filePath);
+      form.reset();
+      return;
+    }
+
+    // Datei hochladen
+    const file = fd.get('file');
+    if (!file) return setStatus('Bitte Videodatei wählen oder Metadaten-Modus aktivieren.', 'err');
+    if (file.size > 9.5 * 1024 * 1024) return setStatus('Datei > 9.5 MB – bitte vorher komprimieren.', 'err');
+
+    setStatus('Lade hoch...', '');
+    const r = await fetch(ENDPOINT_UPLOAD, {
       method: 'POST',
       headers: { 'x-admin-key': ADMIN_KEY },
       body: fd
     });
     const text = await r.text();
     if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
-    setStatus('Fertig! Seite neu laden, um das Video zu sehen.','ok');
+    setStatus('Upload erfolgreich.','ok');
     showResult(file && file.name);
     form.reset();
   } catch (err) {
