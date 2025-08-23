@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Upload – Tennis geht überall</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    :root { color-scheme: dark light; }
+    body { font-family: system-ui, Arial, sans-serif; margin: 1rem auto; max-width: 720px; padding: 0 1rem; }
+    h1 { font-size: 1.4rem; }
+    label { display:block; margin:.5rem 0 .25rem; }
+    input, textarea, button { font: inherit; padding:.6rem .8rem; border-radius:8px; border:1px solid #444; width: 100%; }
+    input[type=file]{ padding:.4rem; }
+    button { background:#F59B00; color:#000; border:none; cursor:pointer; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .hint { color:#777; font-size:.9rem; }
+    .ok { color: #38c172; }
+    .err { color: #e3342f; }
+    .status { margin-top: .75rem; }
+    code { background:#111; padding:.1rem .3rem; border-radius:4px; }
+  </style>
+</head>
+<body>
+  <h1>Video hochladen (Repo-Upload)</h1>
+  <p class="hint">Diese Seite ist privat. Teile die URL nicht. Einzeldateigröße max. 100&nbsp;MB (GitHub API Limit).</p>
+
+  <form id="form">
+    <label for="title">Titel</label>
+    <input id="title" name="title" required>
+
+    <div class="row">
+      <div>
+        <label for="year">Jahr</label>
+        <input id="year" name="year" type="number" min="2000" max="2100" required>
+      </div>
+      <div>
+        <label for="description">Beschreibung</label>
+        <input id="description" name="description" placeholder="optional">
+      </div>
+    </div>
+
+    <label for="file">Video (MP4, ≤ 100 MB)</label>
+    <input id="file" name="file" type="file" accept="video/mp4" required>
+
+    <div class="row">
+      <div>
+        <label for="poster">Poster (JPG/PNG, optional)</label>
+        <input id="poster" name="poster" type="file" accept="image/*">
+      </div>
+      <div>
+        <label for="yearConfirm">Jahr bestätigen</label>
+        <input id="yearConfirm" type="checkbox" required> <span class="hint">Ich bestätige, dass das Jahr korrekt ist.</span>
+      </div>
+    </div>
+
+    <button type="submit">Hochladen</button>
+    <div id="status" class="status"></div>
+    <div id="result" class="status"></div>
+    <div id="videosCheck" class="status"></div>
+    <button id="checkVideos" type="button" style="margin-top:.5rem;">Aktuelle videos.json prüfen</button>
+  </form>
+
+<script>
+const ENDPOINT = "https://tennis-upload.vhorstmann.workers.dev/upload";
+const ADMIN_KEY = "R7mC9xB2kZpQ4tF6nW1sY8uL3aH5vJ0dXqWyEuPo";
+
+const form = document.getElementById('form');
+const statusEl = document.getElementById('status');
+const resultEl = document.getElementById('result');
+const checkBtn = document.getElementById('checkVideos');
+const videosEl = document.getElementById('videosCheck');
+
+function setStatus(msg, cls='') {
+  statusEl.className = 'status ' + cls;
+  statusEl.textContent = msg;
+}
+function showResult(fileName) {
+  resultEl.innerHTML = 'Hochgeladen: <strong>' + (fileName || '(unbekannt)') + '</strong>';
+  resultEl.className = 'status ok';
+}
+async function checkVideosJson() {
+  videosEl.className = 'status';
+  videosEl.textContent = 'Lade videos.json ...';
+  try {
+    // Pfad ggf. anpassen, falls Repo nicht unter /tennis-geht-ueberall/ veröffentlicht ist
+    const r = await fetch('/videos.json?ts=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const arr = await r.json();
+    if (!Array.isArray(arr)) throw new Error('Kein Array erhalten.');
+    const last = arr[arr.length - 1];
+    videosEl.className = 'status ok';
+    videosEl.innerHTML = 'videos.json geladen. Einträge: ' + arr.length + (last ? '<br>Letzter Eintrag: <code>' + (last.title || '(ohne Titel)') + '</code> (' + (last.year || '-') + ')' : '');
+  } catch (e) {
+    videosEl.className = 'status err';
+    videosEl.textContent = 'Konnte videos.json nicht laden: ' + e.message;
+  }
+}
+checkBtn?.addEventListener('click', checkVideosJson);
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(form);
+  const file = fd.get('file');
+  if (!file) return setStatus('Bitte Videodatei wählen', 'err');
+  if (file.size > 100 * 1024 * 1024) return setStatus('Datei > 100 MB. Bitte kleiner komprimieren.', 'err');
+
+  setStatus('Lade hoch...', '');
+  try {
+    const r = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'x-admin-key': ADMIN_KEY },
+      body: fd
+    });
+    const text = await r.text();
+    if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
+    setStatus('Fertig! Seite neu laden, um das Video zu sehen.','ok');
+    showResult(file && file.name);
+    form.reset();
+  } catch (err) {
+    setStatus('Fehler: ' + err.message, 'err');
+  }
+});
+</script>
+</body>
+</html>
