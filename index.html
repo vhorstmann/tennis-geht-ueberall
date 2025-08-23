@@ -11,22 +11,17 @@
 <body>
   <header class="site-header">
     <h1>Tennis geht überall</h1>
-    <nav aria-label="Hauptnavigation">
-      <ul class="nav-legal">
-        <li><a href="impressum.html" class="legal-link">Impressum</a></li>
-        <li><a href="datenschutz.html" class="legal-link">Datenschutz</a></li>
-      </ul>
-    </nav>
-  </header>
+    </header>
 
   <main>
     <section class="controls" aria-labelledby="filter-heading">
       <h2 id="filter-heading" class="visually-hidden">Filter</h2>
       <label for="yearFilter" class="visually-hidden">Videos nach Jahr filtern</label>
       <select id="yearFilter" aria-label="Videos nach Jahr filtern">
-        <option value="">Alle Jahre</option>
+        <option value="">Alle</option>
         <!-- Optionen werden dynamisch ergänzt -->
       </select>
+      <button id="resetFilter"  type="button" aria-label="Filter zurücksetzen">Alle</button>
       <!-- Platz für weitere Filter/Sortierung in Zukunft -->
     </section>
 
@@ -41,8 +36,8 @@
 
   <footer class="site-footer">
     <div class="legal-buttons">
-      <a href="impressum.html" class="legal-button">Impressum</a>
-      <a href="datenschutz.html" class="legal-button">Datenschutz</a>
+      <a href="impressum.html" >Impressum</a>
+      <a href="datenschutz.html" >Datenschutz</a>
     </div>
   </footer>
 

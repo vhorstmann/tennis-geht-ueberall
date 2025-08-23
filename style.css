@@ -238,3 +238,41 @@ h1 { font-size: clamp(1.6rem, 2.5vw + 1rem, 2.2rem); }
   outline-offset: 3px;
   border-radius: 8px;
 }
+
+
+/* ===== Footer link adjustment ===== */
+.legal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.legal-buttons a {
+  background: none;
+  color: #F59B00;
+  font-weight: normal;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.legal-buttons a:hover,
+.legal-buttons a:focus-visible {
+  text-decoration: none;
+  color: #fff;
+}
+
+
+/* Back to Startseite link */
+.back-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #F59B00;
+  text-decoration: underline;
+}
+.back-link:hover,
+.back-link:focus-visible {
+  color: #fff;
+  text-decoration: none;
+}
