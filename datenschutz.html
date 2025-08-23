@@ -1,22 +1,43 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datenschutz</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutz</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Datenschutzerklärung</h1>
-    </header>
-    <main style="padding: 1rem;">
-        <p>
-            Diese Website verwendet keine personenbezogenen Daten. Die Videos werden über GitHub gehostet.
-            Bei Fragen zum Datenschutz kontaktieren Sie bitte 
-            <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a>.
-        </p>
-        <p><a href="index.html" class="legal-button">Zurück zur Startseite</a></p>
-    </main>
+  <header class="site-header">
+    <h1>Datenschutzerklärung</h1>
+    <nav aria-label="Hauptnavigation">
+      <ul class="nav-legal">
+        <li><a href="index.html" class="legal-link">Startseite</a></li>
+        <li><a href="impressum.html" class="legal-link">Impressum</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section>
+      <p>
+        Diese Website speichert und verarbeitet keine personenbezogenen Daten.
+        Die Videos werden direkt über GitHub Pages bereitgestellt.
+      </p>
+      <p>
+        Bei Fragen zum Datenschutz kontaktieren Sie bitte 
+        <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a>.
+      </p>
+      <p><em>Zuletzt aktualisiert: August 2025</em></p>
+    </section>
+
+    <p><a href="index.html" class="legal-button">Zurück zur Startseite</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="legal-buttons">
+      <a href="impressum.html" class="legal-button">Impressum</a>
+      <a href="datenschutz.html" class="legal-button">Datenschutz</a>
+    </div>
+  </footer>
 </body>
 </html>

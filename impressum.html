@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impressum</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impressum</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Impressum</h1>
-    </header>
-    <main style="padding: 1rem;">
-        <p>
-            Volker Horstmann<br>
-            Flurstr. 11<br>
-            33790 Halle<br>
-            Kontakt: <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a><br>
-            Verantwortlich für den Inhalt: Volker Horstmann
-        </p>
-        <p><a href="index.html" class="legal-button">Zurück zur Startseite</a></p>
-    </main>
+  <header class="site-header">
+    <h1>Impressum</h1>
+    <nav aria-label="Hauptnavigation">
+      <ul class="nav-legal">
+        <li><a href="index.html" class="legal-link">Startseite</a></li>
+        <li><a href="datenschutz.html" class="legal-link">Datenschutz</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section>
+      <p>
+        Volker Horstmann<br>
+        Flurstr. 11<br>
+        33790 Halle<br>
+      </p>
+      <p>
+        Kontakt: <a href="mailto:vhorstmann@yahoo.de">vhorstmann@yahoo.de</a><br>
+        Verantwortlich für den Inhalt: Volker Horstmann
+      </p>
+    </section>
+
+    <p><a href="index.html" class="legal-button">Zurück zur Startseite</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="legal-buttons">
+      <a href="impressum.html" class="legal-button">Impressum</a>
+      <a href="datenschutz.html" class="legal-button">Datenschutz</a>
+    </div>
+  </footer>
 </body>
 </html>
